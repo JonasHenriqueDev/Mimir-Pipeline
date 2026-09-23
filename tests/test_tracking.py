@@ -1,7 +1,7 @@
 import pytest
 
-from tcc_pipeline.models import Issue, Snapshot
-from tcc_pipeline.tracking import IssueTracker
+from mimir_pipeline.models import Issue, Snapshot
+from mimir_pipeline.tracking import IssueTracker
 
 
 def issue(key, line=1, **changes):

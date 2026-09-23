@@ -32,7 +32,7 @@ O processo para por limites, ausência de candidatos elegíveis ou ausência de 
 Exporte os apontamentos iniciais:
 
 ```powershell
-.\.venv\Scripts\tcc-pipeline.exe labels-export artifacts/python/exp-ID --output reference_labels/python.csv
+.\.venv\Scripts\mimir-pipeline.exe labels-export artifacts/python/exp-ID --output reference_labels/python.csv
 ```
 
 A planilha contém identidade, regra, caminho, linha original, âncora, mensagem, `manual_label` e `notes`; não contém condição, previsão ou justificativa do modelo. Mantenha rótulos fora do repositório avaliado e do contexto enviado ao LLM. Preencha exatamente `pertinent`, `false_positive` ou `inconclusive`; ausência de rótulo não é considerada resposta correta ou incorreta.
@@ -40,7 +40,7 @@ A planilha contém identidade, regra, caminho, linha original, âncora, mensagem
 O avaliador deve inspecionar o commit de referência, a regra e o comportamento do programa sem acessar as previsões. Defina um manual de anotação e registre justificativas em `notes`. Se houver múltiplos avaliadores, guarde anotações independentes e a adjudicação. A pipeline não calcula concordância entre anotadores automaticamente.
 
 ```powershell
-.\.venv\Scripts\tcc-pipeline.exe labels-evaluate artifacts/python/exp-ID --labels reference_labels/python.csv --output artifacts/python/exp-ID/evaluation
+.\.venv\Scripts\mimir-pipeline.exe labels-evaluate artifacts/python/exp-ID --labels reference_labels/python.csv --output artifacts/python/exp-ID/evaluation
 ```
 
 Esse comando produz `evaluation.json` e `predictions.csv`. Usa a primeira classificação de cada identidade por execução, evitando contar todas as retentativas como novas classificações. Rótulos conhecidos são os do conjunto inicial; classificações sem rótulo permanecem explicitamente desconhecidas. A identidade inicial diferencia ocorrências por posição, mensagem e âncora; durante o ciclo, a chave do scanner mantém a identidade mesmo com deslocamentos de linha.

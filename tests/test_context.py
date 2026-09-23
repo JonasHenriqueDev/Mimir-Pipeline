@@ -2,9 +2,9 @@ import json
 
 import pytest
 
-from tcc_pipeline.config import ProjectConfig
-from tcc_pipeline.context import build_context, redact_text
-from tcc_pipeline.models import Issue
+from mimir_pipeline.config import ProjectConfig
+from mimir_pipeline.context import build_context, redact_text
+from mimir_pipeline.models import Issue
 
 
 def project(tmp_path, **kwargs):

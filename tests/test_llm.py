@@ -4,8 +4,8 @@ from pathlib import Path
 import httpx
 import pytest
 
-from tcc_pipeline.config import LLMConfig
-from tcc_pipeline.llm import (
+from mimir_pipeline.config import LLMConfig
+from mimir_pipeline.llm import (
     _CLASSIFY_PROMPT,
     _PROPOSE_PROMPT,
     BudgetExceeded,
@@ -15,7 +15,7 @@ from tcc_pipeline.llm import (
     StructuredLLM,
     make_llm,
 )
-from tcc_pipeline.models import Issue
+from mimir_pipeline.models import Issue
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ def response_data(**updates):
 
 def client(tmp_path, monkeypatch, handler, **kwargs):
     monkeypatch.setenv("OPENAI_API_KEY", "private-test-key-value")
-    monkeypatch.setattr("tcc_pipeline.llm.time.sleep", lambda _: None)
+    monkeypatch.setattr("mimir_pipeline.llm.time.sleep", lambda _: None)
     config = LLMConfig(model="requested-model", **kwargs)
     return StructuredLLM(config, tmp_path, transport=httpx.MockTransport(handler))
 
@@ -391,7 +391,7 @@ def test_patch_is_bound_to_redacted_not_original_context(tmp_path, monkeypatch, 
 
 
 def test_deadline_blocks_before_network_and_mock(tmp_path, monkeypatch, target, context):
-    monkeypatch.setattr("tcc_pipeline.llm.time.monotonic", lambda: 10.0)
+    monkeypatch.setattr("mimir_pipeline.llm.time.monotonic", lambda: 10.0)
 
     def handler(_):
         pytest.fail("A chamada não pode iniciar após o deadline")
@@ -410,7 +410,7 @@ def test_deadline_blocks_before_network_and_mock(tmp_path, monkeypatch, target, 
 
 
 def test_remaining_deadline_bounds_network_timeout(tmp_path, monkeypatch, target, context):
-    monkeypatch.setattr("tcc_pipeline.llm.time.monotonic", lambda: 10.0)
+    monkeypatch.setattr("mimir_pipeline.llm.time.monotonic", lambda: 10.0)
 
     def handler(request):
         assert request.extensions["timeout"]["read"] == 3.0
@@ -427,7 +427,7 @@ def test_expired_deadline_after_response_records_cost_without_accepting(
     tmp_path, monkeypatch, target, context
 ):
     now = [10.0]
-    monkeypatch.setattr("tcc_pipeline.llm.time.monotonic", lambda: now[0])
+    monkeypatch.setattr("mimir_pipeline.llm.time.monotonic", lambda: now[0])
 
     def handler(_):
         now[0] = 20.0
@@ -445,7 +445,7 @@ def test_expired_deadline_after_response_records_cost_without_accepting(
 
 
 def test_retry_does_not_outlive_deadline(tmp_path, monkeypatch, target, context):
-    monkeypatch.setattr("tcc_pipeline.llm.time.monotonic", lambda: 10.0)
+    monkeypatch.setattr("mimir_pipeline.llm.time.monotonic", lambda: 10.0)
     llm = client(tmp_path, monkeypatch, lambda _: httpx.Response(429, json={"error": "wait"}))
     llm.deadline = 10.5
     with pytest.raises(LLMDeadlineExceeded, match="Tempo restante"):

@@ -7,8 +7,8 @@ from pathlib import Path
 import httpx
 import pytest
 
-from tcc_pipeline.config import ProjectConfig, SonarConfig, load_config
-from tcc_pipeline.sonar import (
+from mimir_pipeline.config import ProjectConfig, SonarConfig, load_config
+from mimir_pipeline.sonar import (
     MockAnalyzer,
     SonarAnalyzer,
     SonarDeadlineExceeded,
@@ -330,9 +330,9 @@ def test_http_timeout_is_limited_by_experiment_deadline(analyzer):
 
 def test_ce_polling_honors_experiment_deadline(analyzer, monkeypatch):
     clock = [100.0]
-    monkeypatch.setattr("tcc_pipeline.sonar.time.monotonic", lambda: clock[0])
+    monkeypatch.setattr("mimir_pipeline.sonar.time.monotonic", lambda: clock[0])
     monkeypatch.setattr(
-        "tcc_pipeline.sonar.time.sleep", lambda seconds: clock.__setitem__(0, clock[0] + seconds)
+        "mimir_pipeline.sonar.time.sleep", lambda seconds: clock.__setitem__(0, clock[0] + seconds)
     )
     analyzer.deadline = 100.5
     calls = []
@@ -360,7 +360,7 @@ def test_scanner_honors_experiment_deadline(analyzer, tmp_path):
 def test_expired_deadline_prevents_starting_scanner(analyzer, tmp_path, monkeypatch):
     analyzer.deadline = time.monotonic() - 1
     monkeypatch.setattr(
-        "tcc_pipeline.sonar.subprocess.Popen",
+        "mimir_pipeline.sonar.subprocess.Popen",
         lambda *args, **kwargs: pytest.fail("scanner should not start"),
     )
     with pytest.raises(SonarDeadlineExceeded):

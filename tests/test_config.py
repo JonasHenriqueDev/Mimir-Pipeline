@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from tcc_pipeline.config import LLMConfig, PipelineConfig, ProjectConfig, SonarConfig, load_config
+from mimir_pipeline.config import LLMConfig, PipelineConfig, ProjectConfig, SonarConfig, load_config
 
 
 def project():

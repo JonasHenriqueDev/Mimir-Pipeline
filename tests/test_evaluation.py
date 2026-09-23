@@ -3,8 +3,8 @@ import json
 
 import pytest
 
-from tcc_pipeline.evaluation import evaluate_labels, export_labels
-from tcc_pipeline.models import Attempt, Classification, Issue, RunResult, Snapshot
+from mimir_pipeline.evaluation import evaluate_labels, export_labels
+from mimir_pipeline.models import Attempt, Classification, Issue, RunResult, Snapshot
 
 
 def fixture_run(tmp_path):

@@ -23,6 +23,6 @@ Evidências locais da entrega:
 - `artifacts/verification/python314.xml` e `python311.xml`: relatórios JUnit da suíte.
 - `artifacts/package-demo/exp-7c1bb8ee035f/report.html`: relatório da demonstração executada pelo wheel instalado.
 - A mesma pasta contém `summary.csv`, `attempts.csv`, `comparison.json`, gráficos, logs, patches e snapshots.
-- `dist/tcc_pipeline-0.1.0-py3-none-any.whl` e `dist/tcc_pipeline-0.1.0.tar.gz`: pacotes construídos.
+- `dist/mimir_pipeline-0.1.0-py3-none-any.whl` e `dist/mimir_pipeline-0.1.0.tar.gz`: pacotes construídos.
 
 Os artefatos locais e pacotes estão ignorados pelo Git; uma nova execução produz outros identificadores. Para coleta científica, escolha o corpus e os commits, prepare Docker/SonarQube, configure o modelo e as credenciais, execute um piloto e siga [o protocolo metodológico](METHODOLOGY.md).

@@ -44,7 +44,7 @@ def acceptance_reason(
 
 def project_environment() -> dict:
     versions = {}
-    for name in ["tcc-pipeline", "httpx", "pydantic", "pyyaml", "typer"]:
+    for name in ["mimir-pipeline", "httpx", "pydantic", "pyyaml", "typer"]:
         try:
             versions[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:

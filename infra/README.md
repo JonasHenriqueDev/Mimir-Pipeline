@@ -1,13 +1,13 @@
 # SonarQube e PostgreSQL
 
-O arquivo `compose.yaml` define SonarQube Community Build e PostgreSQL com imagens fixadas por digest, volumes persistentes e a rede `tcc-pipeline-network`. A porta HTTP é publicada somente em `127.0.0.1:9000`. O banco não publica porta para a máquina.
+O arquivo `compose.yaml` define SonarQube Community Build e PostgreSQL com imagens fixadas por digest, volumes persistentes e a rede `mimir-pipeline-network`. A porta HTTP é publicada somente em `127.0.0.1:9000`. O banco não publica porta para a máquina.
 
 ## Subir o ambiente
 
 É necessário Docker com suporte a Compose e contêineres Linux. No Windows, use Docker Desktop já instalado e iniciado. A instalação/configuração do Docker é uma dependência externa ao projeto.
 
 ```powershell
-Set-Location C:/Dev/tcc-pipeline
+Set-Location 'C:/Dev/Mimir Pipeline'
 Copy-Item .env.example .env
 ```
 
@@ -33,12 +33,12 @@ No PowerShell que executará a pipeline:
 ```powershell
 $env:SONAR_TOKEN = 'SEU_TOKEN'
 $env:OPENAI_API_KEY = 'SUA_CHAVE'
-.\.venv\Scripts\tcc-pipeline.exe doctor --config configs/python.local.yaml
+.\.venv\Scripts\mimir-pipeline.exe doctor --config configs/python.local.yaml
 ```
 
 ## Rede e scanner
 
-O processo Python acessa `http://localhost:9000`. O scanner Docker acessa `http://sonarqube:9000` na rede `tcc-pipeline-network`. Por isso os exemplos têm `sonar.url` e `sonar.scanner_url` distintos.
+O processo Python acessa `http://localhost:9000`. O scanner Docker acessa `http://sonarqube:9000` na rede `mimir-pipeline-network`. Por isso os exemplos têm `sonar.url` e `sonar.scanner_url` distintos.
 
 O Compose fixa `SONAR_MULTI_QUALITY_MODE_ENABLED: 'false'`, correspondente a `sonar.mode: standard` nos YAML. Para estudar o modo MQR, altere ambos antes da coleta e registre a mudança. As propriedades do servidor são descritas na [documentação oficial do SonarQube](https://docs.sonarsource.com/sonarqube-server/server-installation/system-properties/common-properties).
 

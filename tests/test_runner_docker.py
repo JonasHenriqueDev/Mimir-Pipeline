@@ -5,9 +5,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from tcc_pipeline.config import RunnerConfig
-from tcc_pipeline.models import CommandResult
-from tcc_pipeline.runner import Runner, RunnerError, bounded_process
+from mimir_pipeline.config import RunnerConfig
+from mimir_pipeline.models import CommandResult
+from mimir_pipeline.runner import Runner, RunnerError, bounded_process
 
 
 @pytest.fixture
@@ -23,7 +23,7 @@ def docker_runner(tmp_path, monkeypatch):
             return str(git_dir)
         pytest.fail(f"Unexpected Git call: {args}")
 
-    monkeypatch.setattr("tcc_pipeline.runner.git", fake_git)
+    monkeypatch.setattr("mimir_pipeline.runner.git", fake_git)
     result = Runner(RunnerConfig(mode="docker"), tmp_path, tmp_path / "logs")
     return result
 
@@ -90,8 +90,8 @@ def test_docker_exec_timeout_removes_whole_container(docker_runner, monkeypatch)
         calls.append(command)
         return SimpleNamespace(returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr("tcc_pipeline.runner.bounded_process", fake_process)
-    monkeypatch.setattr("tcc_pipeline.runner.subprocess.run", fake_run)
+    monkeypatch.setattr("mimir_pipeline.runner.bounded_process", fake_process)
+    monkeypatch.setattr("mimir_pipeline.runner.subprocess.run", fake_run)
     outcome = docker_runner.run(["{python}", "-m", "pytest", "{repo}"], "test")
     assert outcome.timed_out
     assert calls == [["docker", "rm", "-f", "unit-container"]]
@@ -108,7 +108,7 @@ def test_docker_client_does_not_inherit_model_credentials(docker_runner, monkeyp
         assert "SONAR_TOKEN" not in kwargs["env"]
         return SimpleNamespace(returncode=0, stdout="ready", stderr="")
 
-    monkeypatch.setattr("tcc_pipeline.runner.subprocess.run", fake_run)
+    monkeypatch.setattr("mimir_pipeline.runner.subprocess.run", fake_run)
     assert docker_runner.docker(["version"]) == "ready"
 
 
@@ -125,7 +125,7 @@ def test_failed_creation_preserves_error_when_cleanup_also_fails(
         raise cleanup_error
 
     monkeypatch.setattr(docker_runner, "docker", create_fails)
-    monkeypatch.setattr("tcc_pipeline.runner.subprocess.run", cleanup_fails)
+    monkeypatch.setattr("mimir_pipeline.runner.subprocess.run", cleanup_fails)
     with (
         pytest.warns(RuntimeWarning, match="remover"),
         pytest.raises(RunnerError, match="original create failure"),
@@ -140,7 +140,7 @@ def test_context_exit_preserves_build_error_when_cleanup_fails(docker_runner, mo
     def cleanup_fails(*args, **kwargs):
         raise OSError("Docker unavailable during cleanup")
 
-    monkeypatch.setattr("tcc_pipeline.runner.subprocess.run", cleanup_fails)
+    monkeypatch.setattr("mimir_pipeline.runner.subprocess.run", cleanup_fails)
     # __exit__ must not replace the exception already raised inside the context.
     with pytest.warns(RuntimeWarning, match="remover"):
         assert not docker_runner.__exit__(RuntimeError, RuntimeError("build failed"), None)
@@ -155,8 +155,8 @@ def test_interrupted_local_process_is_stopped(tmp_path, monkeypatch):
             raise KeyboardInterrupt
 
     process = InterruptedProcess()
-    monkeypatch.setattr("tcc_pipeline.runner.subprocess.Popen", lambda *args, **kwargs: process)
-    monkeypatch.setattr("tcc_pipeline.runner.stop_process", stopped.append)
+    monkeypatch.setattr("mimir_pipeline.runner.subprocess.Popen", lambda *args, **kwargs: process)
+    monkeypatch.setattr("mimir_pipeline.runner.stop_process", stopped.append)
     with pytest.raises(KeyboardInterrupt):
         bounded_process(["python", "test.py"], tmp_path, tmp_path / "test.log", 60)
     assert stopped == [process]

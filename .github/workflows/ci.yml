@@ -21,4 +21,4 @@ jobs:
       - run: python -m uv run ruff check .
       - run: python -m uv run ruff format --check .
       - run: python -m uv run pytest -q
-      - run: python -m uv run tcc-pipeline demo --output artifacts/ci-demo
+      - run: python -m uv run mimir-pipeline demo --output artifacts/ci-demo

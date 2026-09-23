@@ -7,11 +7,11 @@ Aplicação Python para comparar correções de apontamentos de manutenibilidade
 Pré-requisitos da demonstração: Python 3.11 ou superior e Git. Execute no PowerShell:
 
 ```powershell
-Set-Location C:/Dev/tcc-pipeline
+Set-Location 'C:/Dev/Mimir Pipeline'
 python -m pip install uv
 python -m uv sync --frozen
-.\.venv\Scripts\tcc-pipeline.exe doctor
-.\.venv\Scripts\tcc-pipeline.exe demo
+.\.venv\Scripts\mimir-pipeline.exe doctor
+.\.venv\Scripts\mimir-pipeline.exe demo
 ```
 
 O comando `demo` cria um repositório de exemplo, executa as duas condições e gera um relatório HTML com CSV, JSON e gráfico. Os backends são simulados; a demonstração verifica o fluxo e **não constitui resultado científico do TCC**. O caminho do relatório é exibido ao final.

@@ -3,12 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from tcc_pipeline.config import RunnerConfig
-from tcc_pipeline.demo import create_demo
-from tcc_pipeline.models import Edit, PatchProposal
-from tcc_pipeline.patching import PatchError, apply_proposal, safe_path
-from tcc_pipeline.runner import Runner, clean_environment
-from tcc_pipeline.workspace import git, tracked_changes
+from mimir_pipeline.config import RunnerConfig
+from mimir_pipeline.demo import create_demo
+from mimir_pipeline.models import Edit, PatchProposal
+from mimir_pipeline.patching import PatchError, apply_proposal, safe_path
+from mimir_pipeline.runner import Runner, clean_environment
+from mimir_pipeline.workspace import git, tracked_changes
 
 
 def proposal(*edits):

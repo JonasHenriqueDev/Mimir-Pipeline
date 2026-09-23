@@ -5,19 +5,19 @@
 Use Python 3.11 ou superior e Git. No PowerShell:
 
 ```powershell
-Set-Location C:/Dev/tcc-pipeline
+Set-Location 'C:/Dev/Mimir Pipeline'
 python -m pip install uv
 python -m uv sync --frozen
-.\.venv\Scripts\tcc-pipeline.exe --help
-.\.venv\Scripts\tcc-pipeline.exe doctor
+.\.venv\Scripts\mimir-pipeline.exe --help
+.\.venv\Scripts\mimir-pipeline.exe doctor
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\ruff.exe check .
 ```
 
-`python -m uv` funciona mesmo quando o executável `uv` não está no PATH. A instalação precisa de acesso aos pacotes; após instalada, a demonstração não usa Docker, SonarQube nem API LLM. Em Linux/macOS, substitua `.\.venv\Scripts\tcc-pipeline.exe` por `.venv/bin/tcc-pipeline`.
+`python -m uv` funciona mesmo quando o executável `uv` não está no PATH. A instalação precisa de acesso aos pacotes; após instalada, a demonstração não usa Docker, SonarQube nem API LLM. Em Linux/macOS, substitua `.\.venv\Scripts\mimir-pipeline.exe` por `.venv/bin/mimir-pipeline`.
 
 ```powershell
-.\.venv\Scripts\tcc-pipeline.exe demo --output artifacts/demo
+.\.venv\Scripts\mimir-pipeline.exe demo --output artifacts/demo
 ```
 
 A demonstração cria seu próprio repositório em `artifacts/demo/demo-sources/`, roda testes reais e usa scanner e respostas LLM simulados. Ela contém uma atribuição removível e outra acessada dinamicamente; o segundo caso permite verificar a preservação do comportamento e a rejeição de uma proposta inadequada. O HTML identifica os dados simulados.
@@ -35,8 +35,8 @@ Copy-Item configs/python.example.yaml configs/python.local.yaml
 # Edite configs/python.local.yaml antes de executar os comandos seguintes.
 $env:SONAR_TOKEN = 'SEU_TOKEN_DO_SONARQUBE'
 $env:OPENAI_API_KEY = 'SUA_CHAVE_DO_PROVEDOR'
-.\.venv\Scripts\tcc-pipeline.exe doctor --config configs/python.local.yaml
-.\.venv\Scripts\tcc-pipeline.exe experiment --config configs/python.local.yaml
+.\.venv\Scripts\mimir-pipeline.exe doctor --config configs/python.local.yaml
+.\.venv\Scripts\mimir-pipeline.exe experiment --config configs/python.local.yaml
 ```
 
 Os valores acima são marcadores; não os copie como credenciais reais. Em terminais compartilhados, injete as variáveis por seu gerenciador de segredos em vez de registrar valores no histórico. A CLI **não carrega `.env` automaticamente**. `--env-file .env` pertence ao Docker Compose e não exporta variáveis para o processo Python.
@@ -61,7 +61,7 @@ O SonarQube precisa permitir que o token execute análises e crie os projetos co
 
 ## Configuração
 
-Os exemplos estão em `configs/python.example.yaml`, `configs/java.example.yaml` e `configs/typescript.example.yaml`. Campos desconhecidos são rejeitados. `project.repo` e `output_dir` relativos são resolvidos em relação à pasta do YAML, não ao terminal. Por exemplo, `repo: ../../python-project` em `C:/Dev/tcc-pipeline/configs/` aponta para `C:/Dev/python-project`.
+Os exemplos estão em `configs/python.example.yaml`, `configs/java.example.yaml` e `configs/typescript.example.yaml`. Campos desconhecidos são rejeitados. `project.repo` e `output_dir` relativos são resolvidos em relação à pasta do YAML, não ao terminal. Por exemplo, `repo: ../../python-project` em `C:/Dev/Mimir Pipeline/configs/` aponta para `C:/Dev/python-project`.
 
 | Grupo | Campos essenciais e comportamento |
 |---|---|

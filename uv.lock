@@ -1112,7 +1112,7 @@ wheels = [
 ]
 
 [[package]]
-name = "tcc-pipeline"
+name = "mimir-pipeline"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

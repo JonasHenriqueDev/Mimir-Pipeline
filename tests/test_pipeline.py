@@ -5,12 +5,12 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from tcc_pipeline.cli import app
-from tcc_pipeline.demo import SOURCE, create_demo
-from tcc_pipeline.models import Edit, PatchProposal
-from tcc_pipeline.orchestration import execute
-from tcc_pipeline.reporting import compare_runs, load_run_results
-from tcc_pipeline.workspace import git
+from mimir_pipeline.cli import app
+from mimir_pipeline.demo import SOURCE, create_demo
+from mimir_pipeline.models import Edit, PatchProposal
+from mimir_pipeline.orchestration import execute
+from mimir_pipeline.reporting import compare_runs, load_run_results
+from mimir_pipeline.workspace import git
 
 
 def test_end_to_end_pair_preserves_original_and_rejects_regression(tmp_path):
@@ -77,7 +77,7 @@ def test_missing_api_key_is_recorded_as_failed_run(tmp_path, monkeypatch):
 
 
 def test_llm_error_is_distinguished_from_infrastructure(tmp_path, monkeypatch):
-    from tcc_pipeline.llm import LLMError, MockLLM
+    from mimir_pipeline.llm import LLMError, MockLLM
 
     def refuse(self, issue, context):
         raise LLMError("Resposta recusada")
@@ -101,7 +101,7 @@ def test_call_budget_stops_without_applying_an_unvalidated_patch(tmp_path):
 
 
 def test_new_issue_rejects_candidate_and_keeps_accepted_baseline(tmp_path, monkeypatch):
-    from tcc_pipeline.llm import MockLLM
+    from mimir_pipeline.llm import MockLLM
 
     def wrong_fix(self, issue, context):
         line = self._line(issue, context)

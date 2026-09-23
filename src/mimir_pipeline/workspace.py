@@ -68,7 +68,7 @@ class Workspace:
         self.base_commit = base_commit
         git(self.repo, "config", "core.autocrlf", "false")
         git(self.repo, "config", "core.hooksPath", "/dev/null")
-        git(self.repo, "config", "user.name", "TCC Pipeline")
+        git(self.repo, "config", "user.name", "Mimir Pipeline")
         git(self.repo, "config", "user.email", "pipeline@localhost")
         git(self.repo, "config", "commit.gpgsign", "false")
 

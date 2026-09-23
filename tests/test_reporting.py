@@ -1,7 +1,7 @@
 import json
 
-from tcc_pipeline.models import Attempt, Issue, RunResult, Snapshot
-from tcc_pipeline.reporting import compare_runs, generate_report, load_run_results, summarize_run
+from mimir_pipeline.models import Attempt, Issue, RunResult, Snapshot
+from mimir_pipeline.reporting import compare_runs, generate_report, load_run_results, summarize_run
 
 
 def make_run(condition="filtered", **changes):

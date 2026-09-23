@@ -28,7 +28,7 @@ sonar:
     - run
     - --rm
     - --network
-    - tcc-pipeline-network
+    - mimir-pipeline-network
     - --env
     - SONAR_TOKEN
     - --volume
