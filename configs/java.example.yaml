@@ -1,0 +1,61 @@
+project:
+  name: java-study
+  repo: ../../java-project
+  ref: HEAD
+  language: java
+  source_globs: ['src/main/java/**/*.java']
+  allowed_edit_globs: ['src/main/java/**/*.java']
+  context_files: [pom.xml]
+  # Single-module Maven example. Freeze dependency/plugin versions in the corpus POM.
+  # The scanner is separate: persist dependency JARs in the mounted worktree.
+  setup_commands:
+    - [mvn, -B, '-DskipTests', 'org.apache.maven.plugins:maven-dependency-plugin:3.8.1:go-offline']
+    - [mvn, -B, 'org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies', '-DincludeScope=compile', '-DoutputDirectory=target/sonar-libraries', '-Dmdep.useRepositoryLayout=true']
+    - [mvn, -B, 'org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy-dependencies', '-DincludeScope=test', '-DoutputDirectory=target/sonar-test-libraries', '-Dmdep.useRepositoryLayout=true']
+  build_commands:
+    - [mvn, -o, -B, '-DskipTests', package]
+  test_commands:
+    - [mvn, -o, -B, test]
+runner:
+  mode: docker
+  image: maven:3.9.9-eclipse-temurin-21@sha256:3a4ab3276a087bf276f79cae96b1af04f53731bec53fb2e651aca79e4b10211e
+  timeout_seconds: 600
+  setup_network: bridge
+  network: none
+sonar:
+  backend: sonar
+  url: http://localhost:9000
+  scanner_url: http://sonarqube:9000
+  scanner_command:
+    - docker
+    - run
+    - --rm
+    - --network
+    - tcc-pipeline-network
+    - --env
+    - SONAR_TOKEN
+    - --volume
+    - '{repo}:/usr/src'
+    - sonarsource/sonar-scanner-cli:12.2.0.4256_8.1.0@sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57
+  properties:
+    sonar.sources: src/main/java
+    sonar.tests: src/test/java
+    sonar.java.binaries: target/classes
+    sonar.java.test.binaries: target/test-classes
+    sonar.java.libraries: target/sonar-libraries/**/*.jar
+    sonar.java.test.libraries: target/sonar-test-libraries/**/*.jar
+    sonar.java.source: '21'
+    sonar.sourceEncoding: UTF-8
+    sonar.scm.disabled: 'true'
+  mode: standard
+  timeout_seconds: 900
+llm:
+  provider: openai
+  model: PREENCHA_COM_MODELO_DISPONIVEL_NA_SUA_CONTA
+  max_calls: 30
+experiment:
+  max_iterations: 3
+  max_attempts: 20
+  max_seconds: 7200
+  repetitions: 1
+output_dir: ../artifacts/java

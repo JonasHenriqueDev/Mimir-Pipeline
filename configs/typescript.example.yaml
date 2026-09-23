@@ -1,0 +1,53 @@
+project:
+  name: typescript-study
+  repo: ../../typescript-project
+  ref: HEAD
+  language: typescript
+  source_globs: ['src/**/*.ts', 'src/**/*.tsx']
+  allowed_edit_globs: ['src/**/*.ts', 'src/**/*.tsx']
+  context_files: [package.json, tsconfig.json]
+  setup_commands:
+    - [npm, ci]
+  build_commands:
+    - [npm, run, build]
+  # Configure test:ci in the source repository to finish once and report a failing exit status.
+  test_commands:
+    - [npm, run, test:ci]
+runner:
+  mode: docker
+  image: node:22.14.0-bookworm-slim@sha256:1c18d9ab3af4585870b92e4dbc5cac5a0dc77dd13df1a5905cea89fc720eb05b
+  timeout_seconds: 600
+  setup_network: bridge
+  network: none
+sonar:
+  backend: sonar
+  url: http://localhost:9000
+  scanner_url: http://sonarqube:9000
+  scanner_command:
+    - docker
+    - run
+    - --rm
+    - --network
+    - tcc-pipeline-network
+    - --env
+    - SONAR_TOKEN
+    - --volume
+    - '{repo}:/usr/src'
+    - sonarsource/sonar-scanner-cli:12.2.0.4256_8.1.0@sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57
+  properties:
+    sonar.sources: src
+    sonar.exclusions: '**/*.test.ts,**/*.spec.ts,**/*.test.tsx,**/*.spec.tsx'
+    sonar.sourceEncoding: UTF-8
+    sonar.scm.disabled: 'true'
+  mode: standard
+  timeout_seconds: 900
+llm:
+  provider: openai
+  model: PREENCHA_COM_MODELO_DISPONIVEL_NA_SUA_CONTA
+  max_calls: 30
+experiment:
+  max_iterations: 3
+  max_attempts: 20
+  max_seconds: 7200
+  repetitions: 1
+output_dir: ../artifacts/typescript

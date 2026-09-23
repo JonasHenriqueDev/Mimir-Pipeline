@@ -1,0 +1,59 @@
+# Adapte caminhos, comandos e modelo ao corpus; congele o ref em um SHA antes da coleta.
+project:
+  name: python-study
+  repo: ../../python-project
+  ref: HEAD
+  language: python
+  source_globs: ['src/**/*.py', '*.py']
+  allowed_edit_globs: ['src/**/*.py', '*.py']
+  context_files: ['pyproject.toml']
+  setup_commands:
+    - [python, -m, pip, install, -e, '.[test]']
+  build_commands:
+    - [python, -m, compileall, -q, src]
+  test_commands:
+    - [python, -m, pytest, -q]
+runner:
+  mode: docker
+  image: python:3.12.13-slim-bookworm@sha256:4766d8b510c428e595d74b9cc5bbb2fae8e26316fffb4adc89908d79aacd58a2
+  timeout_seconds: 300
+  setup_network: bridge
+  network: none
+sonar:
+  backend: sonar
+  url: http://localhost:9000
+  scanner_url: http://sonarqube:9000
+  token_env: SONAR_TOKEN
+  scanner_command:
+    - docker
+    - run
+    - --rm
+    - --network
+    - tcc-pipeline-network
+    - --env
+    - SONAR_TOKEN
+    - --volume
+    - '{repo}:/usr/src'
+    - sonarsource/sonar-scanner-cli:12.2.0.4256_8.1.0@sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57
+  properties:
+    sonar.sources: src
+    sonar.tests: tests
+    sonar.sourceEncoding: UTF-8
+    sonar.python.version: '3.12'
+    sonar.scm.disabled: 'true'
+  mode: standard
+  timeout_seconds: 600
+llm:
+  provider: openai
+  model: PREENCHA_COM_MODELO_DISPONIVEL_NA_SUA_CONTA
+  api_key_env: OPENAI_API_KEY
+  max_calls: 30
+  max_output_tokens: 4096
+experiment:
+  max_iterations: 3
+  max_attempts: 20
+  max_attempts_per_issue: 2
+  max_seconds: 3600
+  repetitions: 1
+  reject_new_issues: true
+output_dir: ../artifacts/python
